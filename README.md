@@ -1,2 +1,2 @@
 # eCommerceApp
-Practical implementation on microservices architecture and containerization using .Net 8
+.NET 8 Microservices: DDD, CQRS, Vertical/Clean Architecture
