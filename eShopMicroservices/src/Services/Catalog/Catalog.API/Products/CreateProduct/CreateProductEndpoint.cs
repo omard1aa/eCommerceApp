@@ -4,13 +4,8 @@ public record CreateProductRequest(string Name, List<string> Category, string De
 
 public record CreateProductResponse(Guid Id);
 
-public class CreateProductEndpoint : ICarterModule
+public class CreateProductEndpoint(ILogger<CreateProductEndpoint> _logger) : ICarterModule
 {
-    private readonly ILogger<CreateProductEndpoint> _logger;
-    public CreateProductEndpoint(ILogger<CreateProductEndpoint> logger)
-    {
-        _logger = logger;
-    }
     public void AddRoutes(IEndpointRouteBuilder app)
     {
         app.MapPost("/products", async (CreateProductRequest request, ISender sender) => {
@@ -21,7 +16,6 @@ public class CreateProductEndpoint : ICarterModule
                 _logger.LogError("Request is null");
                 return Results.BadRequest("Invalid request");
             }
-
             _logger.LogInformation("Request is valid");
 
             if (sender == null)
@@ -29,7 +23,6 @@ public class CreateProductEndpoint : ICarterModule
                 _logger.LogError("ISender is not registered");
                 throw new ArgumentNullException(nameof(sender), "ISender is not registered");
             }
-
             _logger.LogInformation("ISender is registered");
 
             var command = request.Adapt<CreateProductCommand>();
@@ -38,7 +31,6 @@ public class CreateProductEndpoint : ICarterModule
                 _logger.LogError("Command adaptation failed");
                 return Results.BadRequest("Failed to create command");
             }
-
             _logger.LogInformation("Command adaptation succeeded");
 
             var result = await sender.Send(command);
@@ -47,7 +39,6 @@ public class CreateProductEndpoint : ICarterModule
                 _logger.LogError("Failed to create product");
                 return Results.BadRequest("Failed to create product");
             }
-
             _logger.LogInformation("Product creation succeeded");
 
             var response = result.Adapt<CreateProductResponse>();
