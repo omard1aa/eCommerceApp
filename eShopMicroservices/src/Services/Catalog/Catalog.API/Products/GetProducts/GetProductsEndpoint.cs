@@ -4,9 +4,6 @@ public record GetProductsResponse(IEnumerable<Product> Products);
 
 public class GetProductsEndpoint : ICarterModule
 {
-    public GetProductsEndpoint()
-    {
-    }
     public void AddRoutes(IEndpointRouteBuilder app)
     {
         app.MapGet("/products", async (ISender sender, ILogger<GetProductsEndpoint> logger) =>
